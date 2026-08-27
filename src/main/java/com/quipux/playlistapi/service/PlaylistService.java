@@ -25,6 +25,12 @@ public class PlaylistService {
         if (playlistRepository.findByNome(playlist.getNome()).isPresent()) {
             throw new NomeInvalidoException("Já existe uma playlist com esse nome");
         }
+
+        // sincroniza o lado "dono" do relacionamento antes de salvar - resolve o gap de não conseguir salvar a music na mesma play..
+        if (playlist.getMusicas() != null) {
+            playlist.getMusicas().forEach(musica -> musica.setPlaylist(playlist));
+        }
+
         return playlistRepository.save(playlist);
     }
 
@@ -51,5 +57,3 @@ public class PlaylistService {
 }
 
 
-
-// testar no postman

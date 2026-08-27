@@ -1,5 +1,6 @@
 package com.quipux.playlistapi.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -24,5 +25,6 @@ public class Musica {
     // Musica - parte 2 do relacionamento de tabelas.
     // Este é o lado "dono" do relacionamento: guarda a chave estrangeira playlist_id.
     @ManyToOne
+    @JsonBackReference
     private Playlist playlist;
 }
