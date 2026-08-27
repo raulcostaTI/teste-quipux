@@ -130,6 +130,66 @@
       "response": []
     },
     {
+      "name": "Incluir musica na playlist - (201)",
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n  \"titulo\": \"Bohemian Rhapsody\",\r\n  \"artista\": \"Queen\",\r\n  \"album\": \"A Night at the Opera\",\r\n  \"ano\": \"1975\",\r\n  \"genero\": \"Rock\"\r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "http://localhost:8080/lists/Play Rock/musicas",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8080",
+          "path": [
+            "lists",
+            "Play Rock",
+            "musicas"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Incluir musica - playlist nao encontrada - (404)",
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n  \"titulo\": \"Bohemian Rhapsody\",\r\n  \"artista\": \"Queen\",\r\n  \"album\": \"A Night at the Opera\",\r\n  \"ano\": \"1975\",\r\n  \"genero\": \"Rock\"\r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "http://localhost:8080/lists/NaoExiste/musicas",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8080",
+          "path": [
+            "lists",
+            "NaoExiste",
+            "musicas"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
       "name": "Deletar playlist - (200)",
       "request": {
         "method": "DELETE",

@@ -2,8 +2,10 @@ package com.quipux.playlistapi.service;
 
 import com.quipux.playlistapi.exception.NomeInvalidoException;
 import com.quipux.playlistapi.exception.PlaylistNaoEncontradaException;
+import com.quipux.playlistapi.model.Musica;
 import com.quipux.playlistapi.model.Playlist;
 import com.quipux.playlistapi.repository.PlaylistRepository;
+import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -53,6 +55,22 @@ public class PlaylistService {
     public void deletarPorNome(String nome) {
         Playlist playlist = buscarPorNome(nome);
         playlistRepository.delete(playlist);
+
+    }
+
+        // POST /lists/{listName}/musicas - inclui uma música numa playlist existente
+        @Transactional
+        public Playlist adicionarMusica(String listName, Musica musica) {
+            if (musica.getTitulo() == null || musica.getTitulo().isBlank()) {
+                throw new NomeInvalidoException("O título da música é obrigatório");
+            }
+
+            Playlist playlist = buscarPorNome(listName);
+            musica.setPlaylist(playlist);
+            playlist.getMusicas().add(musica);
+
+            return playlistRepository.save(playlist);
+
     }
 }
 

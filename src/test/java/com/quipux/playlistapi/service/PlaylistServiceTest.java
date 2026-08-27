@@ -2,6 +2,7 @@ package com.quipux.playlistapi.service;
 
 import com.quipux.playlistapi.exception.NomeInvalidoException;
 import com.quipux.playlistapi.exception.PlaylistNaoEncontradaException;
+import com.quipux.playlistapi.model.Musica;
 import com.quipux.playlistapi.model.Playlist;
 import com.quipux.playlistapi.repository.PlaylistRepository;
 import org.junit.jupiter.api.Test;
@@ -136,5 +137,48 @@ class PlaylistServiceTest {
         assertThrows(PlaylistNaoEncontradaException.class,
                 () -> playlistService.deletarPorNome("NaoExiste"));
         verify(playlistRepository, never()).delete(any());
+    }
+
+    // ---------- adicionarMusica ----------
+
+    @Test
+    void adicionarMusica_comPlaylistExistente_deveSalvarMusicaNaPlaylist() {
+        Playlist playlist = new Playlist();
+        playlist.setNome("Lista de Rock");
+
+        Musica musica = new Musica();
+        musica.setTitulo("Bohemian Rhapsody");
+        musica.setArtista("Queen");
+
+        when(playlistRepository.findByNome("Lista de Rock")).thenReturn(Optional.of(playlist));
+        when(playlistRepository.save(playlist)).thenReturn(playlist);
+
+        Playlist resultado = playlistService.adicionarMusica("Lista de Rock", musica);
+
+        assertEquals(1, resultado.getMusicas().size());
+        assertEquals(playlist, musica.getPlaylist());
+        verify(playlistRepository).save(playlist);
+    }
+
+    @Test
+    void adicionarMusica_comTituloVazio_deveLancarNomeInvalidoException() {
+        Musica musica = new Musica();
+        musica.setTitulo("   ");
+
+        assertThrows(NomeInvalidoException.class,
+                () -> playlistService.adicionarMusica("Lista de Rock", musica));
+        verify(playlistRepository, never()).save(any());
+    }
+
+    @Test
+    void adicionarMusica_comPlaylistInexistente_deveLancarPlaylistNaoEncontradaException() {
+        Musica musica = new Musica();
+        musica.setTitulo("Bohemian Rhapsody");
+
+        when(playlistRepository.findByNome("NaoExiste")).thenReturn(Optional.empty());
+
+        assertThrows(PlaylistNaoEncontradaException.class,
+                () -> playlistService.adicionarMusica("NaoExiste", musica));
+        verify(playlistRepository, never()).save(any());
     }
 }
