@@ -4,6 +4,7 @@ import com.quipux.playlistapi.model.Playlist;
 import com.quipux.playlistapi.service.PlaylistService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.util.UriComponentsBuilder;
 
 import java.net.URI;
 import java.util.List;
@@ -23,7 +24,12 @@ public class PlaylistController {
     @PostMapping
     public ResponseEntity<Playlist> criar(@RequestBody Playlist playlist) {
         Playlist criada = playlistService.criarPlaylist(playlist);
-        return ResponseEntity.created(URI.create("/lists/" + criada.getNome())).body(criada);
+
+
+        URI location = UriComponentsBuilder.fromPath("/lists/{nome}")
+                .buildAndExpand(criada.getNome())
+                .toUri();
+        return ResponseEntity.created(location).body(criada);
     }
 
     // GET /lists - lista todas as playlists
@@ -33,7 +39,7 @@ public class PlaylistController {
         return ResponseEntity.ok(playlistService.listarTodas());
     }
 
-    // GET /lists/{listName} - busca uma playlist/nome
+    // GET /lists/{listName} - busca uma playlist pelo nome
 
     @GetMapping("/{listName}")
     public ResponseEntity<Playlist> buscarPorNome(@PathVariable String listName) {
@@ -48,4 +54,3 @@ public class PlaylistController {
         return ResponseEntity.noContent().build();
     }
 }
-
