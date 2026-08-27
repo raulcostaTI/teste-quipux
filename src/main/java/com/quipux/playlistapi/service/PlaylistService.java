@@ -39,7 +39,6 @@ public class PlaylistService {
                         "Playlist com nome '" + nome + "' não encontrada"));
     }
 
-
     // DELETE/lists/{listName} - apaga uma playlist
 
     public void deletarPorNome(String nome) {
