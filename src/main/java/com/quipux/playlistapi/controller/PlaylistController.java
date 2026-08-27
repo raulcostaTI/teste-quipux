@@ -1,5 +1,5 @@
 package com.quipux.playlistapi.controller;
-import com.quipux.playlistapi.model.Musica; // Nova Feature - Inclusão da musica na Playlist
+import com.quipux.playlistapi.model.Musica;
 import com.quipux.playlistapi.model.Playlist;
 import com.quipux.playlistapi.service.PlaylistService;
 import org.springframework.http.ResponseEntity;
@@ -20,7 +20,6 @@ public class PlaylistController {
     }
 
     // POST /lists - cria uma nova playlist
-
     @PostMapping
     public ResponseEntity<Playlist> criar(@RequestBody Playlist playlist) {
         Playlist criada = playlistService.criarPlaylist(playlist);
@@ -33,14 +32,12 @@ public class PlaylistController {
     }
 
     // GET /lists - lista todas as playlists
-
     @GetMapping
     public ResponseEntity<List<Playlist>> listarTodas() {
         return ResponseEntity.ok(playlistService.listarTodas());
     }
 
     // GET /lists/{listName} - busca uma playlist pelo nome
-
     @GetMapping("/{listName}")
     public ResponseEntity<Playlist> buscarPorNome(@PathVariable String listName) {
         return ResponseEntity.ok(playlistService.buscarPorNome(listName));
@@ -49,7 +46,6 @@ public class PlaylistController {
 
 
     // DELETE /lists/{listName} - apaga uma playlist/nome
-
     @DeleteMapping("/{listName}")
     public ResponseEntity<Void> deletar(@PathVariable String listName) {
 
@@ -59,8 +55,7 @@ public class PlaylistController {
     }
 
 
-    // POST /lists/{listName}/musicas - inclui uma música numa playlist existente
-
+    // POST /lists/{listName}/musicas - inclui uma música numa playlist
     @PostMapping("/{listName}/musicas")
     public ResponseEntity<Playlist> adicionarMusica(
             @PathVariable String listName,
