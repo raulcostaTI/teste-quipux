@@ -24,7 +24,7 @@ public class SecurityConfig {
     @Bean
     public InMemoryUserDetailsManager userDetailsService(PasswordEncoder encoder) {
         UserDetails user = User.builder()
-                .username("admin")
+                .username("quipux.admin")
                 .password(encoder.encode("123456"))
                 .roles("USER")
                 .build();
@@ -39,7 +39,7 @@ public class SecurityConfig {
                         .requestMatchers("/h2-console/**").permitAll()
                         .anyRequest().authenticated()
                 )
-                .httpBasic(Customizer.withDefaults()) // Teste de autentição
+                .httpBasic(Customizer.withDefaults())
                 .headers(headers -> headers.frameOptions(frame -> frame.sameOrigin()));
 
         return http.build();
@@ -47,4 +47,3 @@ public class SecurityConfig {
 }
 
 
-// erro 403 na requisição...

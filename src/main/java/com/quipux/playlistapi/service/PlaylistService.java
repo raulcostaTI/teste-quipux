@@ -22,6 +22,9 @@ public class PlaylistService {
         if (playlist.getNome() == null || playlist.getNome().isBlank()) {
             throw new NomeInvalidoException("O nome da lista é obrigatório");
         }
+        if (playlistRepository.findByNome(playlist.getNome()).isPresent()) {
+            throw new NomeInvalidoException("Já existe uma playlist com esse nome");
+        }
         return playlistRepository.save(playlist);
     }
 

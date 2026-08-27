@@ -18,6 +18,7 @@ public class Playlist {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(unique = true) // Solução da duplicidade de nome nas playlist
     private String nome;
 
     private String descricao;
