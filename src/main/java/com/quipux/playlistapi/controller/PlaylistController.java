@@ -19,11 +19,9 @@ public class PlaylistController {
         this.playlistService = playlistService;
     }
 
-    // POST /lists - cria uma nova playlist
     @PostMapping
     public ResponseEntity<Playlist> criar(@RequestBody Playlist playlist) {
         Playlist criada = playlistService.criarPlaylist(playlist);
-
 
         URI location = UriComponentsBuilder.fromPath("/lists/{nome}")
                 .buildAndExpand(criada.getNome())
@@ -31,29 +29,21 @@ public class PlaylistController {
         return ResponseEntity.created(location).body(criada);
     }
 
-    // GET /lists - lista todas as playlists
     @GetMapping
     public ResponseEntity<List<Playlist>> listarTodas() {
         return ResponseEntity.ok(playlistService.listarTodas());
     }
 
-    // GET /lists/{listName} - busca uma playlist pelo nome
     @GetMapping("/{listName}")
     public ResponseEntity<Playlist> buscarPorNome(@PathVariable String listName) {
         return ResponseEntity.ok(playlistService.buscarPorNome(listName));
     }
 
-
-
-    // DELETE /lists/{listName} - apaga uma playlist/nome
     @DeleteMapping("/{listName}")
     public ResponseEntity<Void> deletar(@PathVariable String listName) {
-
         playlistService.deletarPorNome(listName);
-
         return ResponseEntity.noContent().build();
     }
-
 
     // POST /lists/{listName}/musicas - inclui uma música numa playlist
     @PostMapping("/{listName}/musicas")
@@ -73,4 +63,13 @@ public class PlaylistController {
                 .body(atualizada);
     }
 
+    // DELETE /lists/{listName}/musicas/{musicaId} - remove uma música de uma playlist
+    @DeleteMapping("/{listName}/musicas/{musicaId}")
+    public ResponseEntity<Playlist> removerMusica(
+            @PathVariable String listName,
+            @PathVariable Long musicaId) {
+
+        Playlist atualizada = playlistService.removerMusica(listName, musicaId);
+        return ResponseEntity.ok(atualizada);
+    }
 }

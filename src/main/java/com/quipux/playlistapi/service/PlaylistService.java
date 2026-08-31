@@ -19,7 +19,6 @@ public class PlaylistService {
         this.playlistRepository = playlistRepository;
     }
 
-    // POST/lists - cria uma nova playlist
     public Playlist criarPlaylist(Playlist playlist) {
         if (playlist.getNome() == null || playlist.getNome().isBlank()) {
             throw new NomeInvalidoException("O nome da lista é obrigatório");
@@ -28,7 +27,6 @@ public class PlaylistService {
             throw new NomeInvalidoException("Já existe uma playlist com esse nome");
         }
 
-        // sincroniza o lado "dono" do relacionamento antes de salvar - resolve o gap de não conseguir salvar a music na mesma play..
         if (playlist.getMusicas() != null) {
             playlist.getMusicas().forEach(musica -> musica.setPlaylist(playlist));
         }
@@ -36,13 +34,9 @@ public class PlaylistService {
         return playlistRepository.save(playlist);
     }
 
-    // GET/lists - retorna todas as playlists
-
     public List<Playlist> listarTodas() {
         return playlistRepository.findAll();
     }
-
-    // GET/lists/{listName} - busca uma playlist pelo nome
 
     public Playlist buscarPorNome(String nome) {
         return playlistRepository.findByNome(nome)
@@ -50,28 +44,33 @@ public class PlaylistService {
                         "Playlist com nome '" + nome + "' não encontrada"));
     }
 
-    // DELETE/lists/{listName} - apaga uma playlist
-
     public void deletarPorNome(String nome) {
         Playlist playlist = buscarPorNome(nome);
         playlistRepository.delete(playlist);
-
     }
 
-        // POST /lists/{listName}/musicas - inclui uma música numa playlist existente
-        @Transactional
-        public Playlist adicionarMusica(String listName, Musica musica) {
-            if (musica.getTitulo() == null || musica.getTitulo().isBlank()) {
-                throw new NomeInvalidoException("O título da música é obrigatório");
-            }
+    @Transactional
+    public Playlist adicionarMusica(String listName, Musica musica) {
+        if (musica.getTitulo() == null || musica.getTitulo().isBlank()) {
+            throw new NomeInvalidoException("O título da música é obrigatório");
+        }
 
-            Playlist playlist = buscarPorNome(listName);
-            musica.setPlaylist(playlist);
-            playlist.getMusicas().add(musica);
+        Playlist playlist = buscarPorNome(listName);
+        musica.setPlaylist(playlist);
+        playlist.getMusicas().add(musica);
 
-            return playlistRepository.save(playlist);
+        return playlistRepository.save(playlist);
+    }
 
+    @Transactional
+    public Playlist removerMusica(String listName, Long musicaId) {
+        Playlist playlist = buscarPorNome(listName);
+        boolean removeu = playlist.getMusicas().removeIf(musica -> musica.getId().equals(musicaId));
+
+        if (!removeu) {
+            throw new PlaylistNaoEncontradaException("Música não encontrada nesta playlist");
+        }
+
+        return playlistRepository.save(playlist);
     }
 }
-
-
