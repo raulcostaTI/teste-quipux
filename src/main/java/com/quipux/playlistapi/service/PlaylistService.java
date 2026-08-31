@@ -34,8 +34,11 @@ public class PlaylistService {
         return playlistRepository.save(playlist);
     }
 
-    public List<Playlist> listarTodas() {
-        return playlistRepository.findAll();
+    public List<Playlist> listarTodas(String filtro) {
+        if (filtro == null || filtro.isBlank()) {
+            return playlistRepository.findAll();
+        }
+        return playlistRepository.findByNomeContainingIgnoreCase(filtro);
     }
 
     public Playlist buscarPorNome(String nome) {

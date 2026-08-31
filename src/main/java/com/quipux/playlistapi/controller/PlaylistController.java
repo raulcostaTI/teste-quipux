@@ -30,8 +30,8 @@ public class PlaylistController {
     }
 
     @GetMapping
-    public ResponseEntity<List<Playlist>> listarTodas() {
-        return ResponseEntity.ok(playlistService.listarTodas());
+    public ResponseEntity<List<Playlist>> listarTodas(@RequestParam(required = false) String nome) {
+        return ResponseEntity.ok(playlistService.listarTodas(nome));
     }
 
     @GetMapping("/{listName}")
